@@ -1,0 +1,38 @@
+{
+  "metadata": {
+    "spec-version": "1.4"
+  },
+  "display-name": "SampleSink",
+  "configuration-groups": [
+    {
+      "label": "Sample Sink Config",
+      "properties": [
+        {
+          "widget-type": "textbox",
+          "label": "Sample ID",
+          "name": "sampleID",
+          "widget-attributes": {
+            "default": "JCS",
+            "placeholder": "ID of sample"
+          }
+        },
+        {
+          "widget-type": "textbox",
+          "label": "Sample Number",
+          "name": "sampleNumber",
+          "widget-attributes": {
+            "default": 100,
+            "placeholder": "Number of sample records"
+          }
+        }
+      ]
+    }
+  ],
+  "jump-config": {
+    "datasets": [
+      {
+        "ref-property-name": "sampleID"
+      }
+    ]
+  }
+}
