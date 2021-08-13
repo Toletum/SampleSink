@@ -28,6 +28,10 @@ import io.cdap.cdap.etl.api.batch.SparkPluginContext;
 import io.cdap.cdap.etl.api.batch.SparkSink;
 import io.cdap.cdap.format.StructuredRecordStringConverter;
 
+import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -53,6 +57,8 @@ public class SampleSink extends SparkSink<StructuredRecord> {
    */
   @Override
   public void prepareRun(SparkPluginContext context) throws Exception {
+
+    LOG.info("Compilation date {}", classBuildTimeMillis(SampleSink.class));
   }
 
   /**
@@ -68,35 +74,49 @@ public class SampleSink extends SparkSink<StructuredRecord> {
     for(int i = 0; i < data.size(); i++) {
       record = (StructuredRecord)data.get(i);
 
-      LOG.info("{} -> {}", config.getSampleID(), StructuredRecordStringConverter.toDelimitedString(record," - "));
+      LOG.info("{} -> {}", sparkExecutionPluginContext.getStageName(), StructuredRecordStringConverter.toDelimitedString(record," - "));
     }
 
 
   }
 
+  private static Date classBuildTimeMillis(java.lang.Class o) {
+
+    URL resource = o.getResource(o.getSimpleName() + ".class");
+    if (resource == null) {
+      return new Date(0);
+    }
+    if (resource.getProtocol().equals("file")) {
+
+      try {
+        return new Date(new File(resource.toURI()).lastModified());
+      } catch (URISyntaxException e) {
+        return new Date(0);
+      }
+
+    } else if (resource.getProtocol().equals("jar")) {
+
+      String path = resource.getPath();
+      return new Date(new File(path.substring(5, path.indexOf("!"))).lastModified());
+
+    } else {
+      return new Date(0);
+    }
+  }
 
 
   /**
    * Config properties for the plugin.
    */
   public static final class SampleSinkConfig extends PluginConfig {
-    @Name("sampleID")
-    @Description("ID")
-    @Macro
-    public String sampleID;
 
     @Name("sampleNumber")
     @Description("Number of sample records.")
     @Macro
     public Integer sampleNumber;
 
-    public SampleSinkConfig(String sampleID, Integer sampleNumber) {
-      this.sampleID = sampleID;
+    public SampleSinkConfig(Integer sampleNumber) {
       this.sampleNumber = sampleNumber;
-    }
-
-    public String getSampleID() {
-      return sampleID;
     }
 
     public Integer getSampleNumber() {

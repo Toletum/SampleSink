@@ -9,15 +9,6 @@
       "properties": [
         {
           "widget-type": "textbox",
-          "label": "Sample ID",
-          "name": "sampleID",
-          "widget-attributes": {
-            "default": "JCS",
-            "placeholder": "ID of sample"
-          }
-        },
-        {
-          "widget-type": "textbox",
           "label": "Sample Number",
           "name": "sampleNumber",
           "widget-attributes": {
@@ -27,12 +18,5 @@
         }
       ]
     }
-  ],
-  "jump-config": {
-    "datasets": [
-      {
-        "ref-property-name": "sampleID"
-      }
-    ]
-  }
+  ]
 }
